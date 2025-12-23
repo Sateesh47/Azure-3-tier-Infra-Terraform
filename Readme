@@ -1,15 +1,16 @@
-# Azure 3‑Tier Architecture — Terraform Deploymen
+# Azure 3‑Tier Architecture — Terraform Deployment
 
 This repository contains a fully modular, production‑ready **3‑tier application architecture** deployed on Microsoft Azure using Terraform.  
 The design follows cloud‑architecture best practices with complete network isolation, private database access, and a scalable frontend.
 
 ---
 
-# 📐 **Architecture Overview**
+## 📐 Architecture Overview
 
 The infrastructure is organized into **three tiers**, each isolated in its own subnet:
 
-```
+
+
                  Internet
                      |
              +----------------+
@@ -21,9 +22,10 @@ The infrastructure is organized into **three tiers**, each isolated in its own s
                 App Subnet
                      |
                 DB Subnet
-```
 
-### ✅ **Components**
+
+
+### ✅ Components
 - **Application Gateway (AGW)** – Public entry point, HTTP listener, routes traffic to Web tier  
 - **Web Tier VM** – Frontend application server  
 - **App Tier VM + Internal Load Balancer** – Backend application logic  
@@ -35,33 +37,21 @@ The infrastructure is organized into **three tiers**, each isolated in its own s
 
 ---
 
-# 📦 **Module Structure**
+## 📦 Module Structure
 
-```
-modules/
-  rg/           → Resource Group
-  network/      → VNet + Subnets
-  nat/          → NAT Gateway
-  vm/           → Generic VM module
-  ilb/          → Internal Load Balancer (App tier)
-  mysql/        → Private MySQL Flexible Server
-  agw/          → Application Gateway (HTTP)
-root/
-  main.tf       → Wires all modules together
-  variables.tf  → Root variables
-  terraform.tfvars → Environment values
-```
+
 
 Each module is reusable, isolated, and follows Terraform best practices.
 
 ---
 
-# 🚀 **Deployment Steps**
+## 🚀 Deployment Steps
 
 ### ✅ 1. Initialize Terraform
-```
+```bash
 terraform init
-```
+
+---
 
 ### ✅ 2. Validate configuration
 ```
@@ -161,4 +151,4 @@ You can extend this architecture with:
 # ✅ **Conclusion**
 
 This project provides a clean, modular, scalable foundation for deploying a **secure 3‑tier application** on Azure using Terraform.  
-Every component is isolated, reusable, and production‑ready.
+Every component is isolated, reusable.
