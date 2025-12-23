@@ -1,0 +1,164 @@
+# Azure 3‑Tier Architecture — Terraform Deploymen
+
+This repository contains a fully modular, production‑ready **3‑tier application architecture** deployed on Microsoft Azure using Terraform.  
+The design follows cloud‑architecture best practices with complete network isolation, private database access, and a scalable frontend.
+
+---
+
+# 📐 **Architecture Overview**
+
+The infrastructure is organized into **three tiers**, each isolated in its own subnet:
+
+```
+                 Internet
+                     |
+             +----------------+
+             | Application GW |
+             +----------------+
+                     |
+                Web Subnet
+                     |  ILB
+                App Subnet
+                     |
+                DB Subnet
+```
+
+### ✅ **Components**
+- **Application Gateway (AGW)** – Public entry point, HTTP listener, routes traffic to Web tier  
+- **Web Tier VM** – Frontend application server  
+- **App Tier VM + Internal Load Balancer** – Backend application logic  
+- **MySQL Flexible Server (Private)** – Database tier with private DNS  
+- **Virtual Network + Subnets** – Network isolation  
+- **NAT Gateway** – Outbound internet for Web/App VMs  
+- **Private DNS Zone** – Resolves MySQL FQDN to private IP  
+- **Resource Group** – Logical grouping of all resources  
+
+---
+
+# 📦 **Module Structure**
+
+```
+modules/
+  rg/           → Resource Group
+  network/      → VNet + Subnets
+  nat/          → NAT Gateway
+  vm/           → Generic VM module
+  ilb/          → Internal Load Balancer (App tier)
+  mysql/        → Private MySQL Flexible Server
+  agw/          → Application Gateway (HTTP)
+root/
+  main.tf       → Wires all modules together
+  variables.tf  → Root variables
+  terraform.tfvars → Environment values
+```
+
+Each module is reusable, isolated, and follows Terraform best practices.
+
+---
+
+# 🚀 **Deployment Steps**
+
+### ✅ 1. Initialize Terraform
+```
+terraform init
+```
+
+### ✅ 2. Validate configuration
+```
+terraform validate
+```
+
+### ✅ 3. Preview the infrastructure
+```
+terraform plan
+```
+
+### ✅ 4. Deploy to Azure
+```
+terraform apply
+```
+
+---
+
+# 🔐 **Security Features**
+
+- **Private MySQL** (no public endpoint)  
+- **Private DNS Zone** for internal name resolution  
+- **Subnet isolation** (AGW/Web/App/DB)  
+- **No public IPs on VMs**  
+- **NAT Gateway** for secure outbound traffic  
+- **Application Gateway** as the only public entry point  
+
+---
+
+# 🌐 **Networking Layout**
+
+| Tier | Subnet | Purpose |
+|------|--------|---------|
+| AGW | `subnet_agw` | Application Gateway |
+| Web | `subnet_web` | Frontend VM |
+| App | `subnet_app` | Backend VM + ILB |
+| DB | `subnet_db` | MySQL Flexible Server |
+
+---
+
+# 🗄️ **Database Connectivity**
+
+Azure MySQL Flexible Server provides a **private FQDN**:
+
+```
+mysql-db-01.privatelink.mysql.database.azure.com
+```
+
+The App tier connects using this FQDN.  
+A **Private DNS Zone** maps the FQDN → private IP, and a **VNet link** allows VMs to resolve it.
+
+---
+
+# 🧩 **Application Gateway Flow (HTTP Only)**
+
+```
+Client → Public IP → AGW Listener → Backend Pool → Web VM
+```
+
+Later, you can enhance this with:
+
+- HTTPS + SSL certificate  
+- WAF_v2  
+- Autoscaling  
+- VM Scale Sets  
+
+---
+
+# 🛠️ **Customization**
+
+Modify `terraform.tfvars` to change:
+
+- Region  
+- VNet CIDR  
+- Subnet CIDRs  
+- VM sizes  
+- MySQL settings  
+- Tags  
+
+This makes the deployment environment‑agnostic.
+
+---
+
+# 📈 **Future Enhancements**
+
+You can extend this architecture with:
+
+- ✅ HTTPS + SSL termination  
+- ✅ WAF_v2 for security  
+- ✅ VM Scale Sets (Web/App)  
+- ✅ Azure Bastion for secure VM access  
+- ✅ Private Endpoints for Storage/Key Vault  
+- ✅ Monitoring (Log Analytics, Insights)  
+
+---
+
+# ✅ **Conclusion**
+
+This project provides a clean, modular, scalable foundation for deploying a **secure 3‑tier application** on Azure using Terraform.  
+Every component is isolated, reusable, and production‑ready.
