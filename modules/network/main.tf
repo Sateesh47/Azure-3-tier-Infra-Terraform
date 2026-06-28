@@ -78,20 +78,6 @@ resource "azurerm_network_security_group" "nsg_agw" {
     source_address_prefix      = "AzureLoadBalancer"
     destination_address_prefix = "*"
   }
-
-  # Inbound: Internet -> AGW (65200–65535)
-  security_rule {
-    name                       = "Allow-Internet-Ephemeral-Ports"
-    priority                   = 102
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_ranges    = ["65200-65535"]
-    source_address_prefix      = "Internet"
-    destination_address_prefix = "*"
-  }
-
   # Outbound: AGW -> Web subnet (80,443)
   security_rule {
     name                       = "Allow-Outbound-To-Web-HTTP-HTTPS"
